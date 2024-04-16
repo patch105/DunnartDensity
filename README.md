@@ -6,7 +6,7 @@ The Julia Creek Dunnart (_Sminthopsis douglasi_) is an endangered small mammal f
 
 Code and data provided here outline the analysis of _S. douglasi_ capture-recapture data. 
 
-Further details of the project methods, results, and discussion are presented in our paper entitled: "Density of a cryptic Australian small mammal: the threatened Julia Creek Dunnart (Sminthopsis douglasi)" Ecology and Evolution. A. H. Bakker, Patterson C.R., Mifsud G., Reside A., Fuller S., and Baker A.M.
+Further details of the project methods, results, and discussion are presented in our paper entitled: "Density of a cryptic Australian small mammal: the threatened Julia Creek Dunnart (_Sminthopsis douglasi_)" Ecology and Evolution. A. H. Bakker, Patterson C.R., Mifsud G., Reside A., Fuller S., and Baker A.M.
 
 The data/code presented here include:
 - captfile.txt : The capture-recapture data from the trapping grid, including individual animal IDs, the occasion, and the detector the animal was trapped in
