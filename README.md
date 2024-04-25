@@ -11,6 +11,7 @@ Further details of the project methods, results, and discussion are presented in
 The data/code presented here include:
 - captfile.txt : The capture-recapture data from the two trapping grids (scrammy and campbells), including individual animal IDs, the occasion (trap night), and the detector (trap) that the animal was caught in
 - trapfile.txt : The coordinates of traps in the grid
-- Julia_creek_dunnart_density_code.html : All code used to run the spatially explicit capture-recapture analysis
+- Dunnar_Density.qmd : All code used to run the spatially explicit capture-recapture analysis within a Quarto document
+- Dunnart_Density.html : All code used to run the spatially explicit capture-recapture analysis in html format
 
 Contact Charlotte Patterson at crpattrsn@gmail.com for queries.
