@@ -1,0 +1,47 @@
+---
+title: "Julia Creek Dunnart Density Analysis"
+author: "Charlotte Patterson & Alice Bakker"
+format: html
+editor: visual
+---
+
+## Project Description
+
+The Julia Creek Dunnart (*Sminthopsis douglasi*) is an endangered small mammal found in central west Queensland, Australia. This project aims to provide the first population density and population size estimates for *S. douglasi* within a national park. Density and population size are estimated via spatially explicit capture-recapture, using live capture data collected over seven trapping sessions between 2022 and 2023.
+
+Further details of the project methods, results, and discussion are presented in our paper entitled: "Density of a cryptic Australian small mammal: the threatened Julia Creek Dunnart (*Sminthopsis douglasi*)" Ecology and Evolution. A. H. Bakker, Patterson C.R., Mifsud G., Reside A., Fuller S., and Baker A.M.
+
+
+# Load required packages
+
+```{r}
+#| output: false
+library(purrr)
+
+packages <- c("secr", "here", "sf", "ggplot2", "dplyr")
+
+walk(packages, require, character.only = T)
+
+here::here()
+
+```
+
+# Load the data
+
+Load the capture file and the trap file. View these. Each session is a unique trapping period at one of the two sites (Scrammy, Campbells). Each row is a unique capture event. The ID for individual animals is in the column "ID". The column "occasion" is the trap night for that session. The Detector is the unique ID for each trap.
+
+```{r}
+
+CH <- read.capthist("Data/captfile.txt", "Data/trapfile.txt", detector = "multi")
+
+```
+
+```{r}
+
+summary(CH, terse = T)
+
+# Or view full summary output
+# summary(CH)
+
+```
+
