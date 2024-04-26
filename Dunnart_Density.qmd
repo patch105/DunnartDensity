@@ -11,7 +11,6 @@ The Julia Creek Dunnart (*Sminthopsis douglasi*) is an endangered small mammal f
 
 Further details of the project methods, results, and discussion are presented in our paper entitled: "Density of a cryptic Australian small mammal: the threatened Julia Creek Dunnart (*Sminthopsis douglasi*)" Ecology and Evolution. A. H. Bakker, Patterson C.R., Mifsud G., Reside A., Fuller S., and Baker A.M.
 
-
 # Load required packages
 
 ```{r}
@@ -32,7 +31,16 @@ Load the capture file and the trap file. View these. Each session is a unique tr
 
 ```{r}
 
+CH_zero <- read.capthist("Data/captfile_zeros.txt", "Data/trapfile.txt", detector = "multi")
+
 CH <- read.capthist("Data/captfile.txt", "Data/trapfile.txt", detector = "multi")
+
+# Set order to make sure session-specific trap layouts match with sessions order at the two field sites (ordered by session name)
+CH_zero <- read.capthist("Data/captfile_zeros.txt", c("Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt"), 
+                    detector = "multi")
+
+CH_zero <- read.capthist("Data/captfile.txt", c("Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_campbells_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt", "Data/trapfile_scrammy_MGA2020.txt"), 
+                    detector = "multi")
 
 ```
 
@@ -44,4 +52,134 @@ summary(CH, terse = T)
 # summary(CH)
 
 ```
+# Plot recaptures
+
+```{r}
+
+par(mar = c(0,0,0,0)) 
+
+plot(CH_zero, tracks = TRUE)
+
+```
+View successive trap-revealed movement distances, summarise with the median and a histogram. Observing that most individuals were showing movements > 50 m (our trap spacing) suggests that even individuals with home range centres outside of the trapping grid would have had the opportunity to be caught (Efford, 2022).
+
+```{r}
+m <- unlist(moves(CH_zero)) 
+m
+median(m)
+
+par(mar = c(5,4,4,2), mgp = c(3,1,0)) # reduce margins
+hist(m, breaks = seq(0, 550,30), xlab = "Movement (m)", main = "")
+```
+
+## Choosing detection function
+
+We must check the effect of different detection function shapes. We do this by fitting models with the half-normal and exponential functions and comparing the estimated densities. We set the autoini = 6 to set our starting parameter values from a session with capture data. The default for a multi-session analysis is to take starting parameter values from the first session which doesn't work when the session has no captures.  
+
+We also compare model fit via AICc (Akaike's Information Criterion).
+
+```{r}
+#The half-normal
+fit.HN <- secr.fit(CH_zero,
+                detectfn = 'HN',
+                buffer = 300,
+                details = list(autoini = 6),
+                trace = F)
+
+#Now the exponential
+fit.EX <- secr.fit (CH_zero,
+                  detectfn = 'EX',
+                  buffer = 300,
+                  details = list(autoini = 6),
+                  trace = FALSE,)
+
+#Combine into an object of class secrlist
+fits <- secrlist(HN = fit.HN, EX = fit.EX)
+
+# Look at the density values, g0 and sigma, plus SEs
+predict(fits)
+
+```
+The density estimates are similar. The difference is in the detection parameters g0 and sigma.
+
+Apply AICc.
+
+```{r}
+
+AIC(fits,criterion = 'AICc')
+
+```
+The most-supported model is the exponential, with an AICc weight of 0.99 and a ΔAICc from the exponential to the half-normal of 8.4.
+
+
+```{r}
+
+esa.plot(fits)
+abline(v = 300, lty = 2, col = 'red')
+
+```
+## Choosing Buffer Width (option without mask)
+
+Now we print an initial estimate of sigma (a measure of home range shape - how much the probability of capture declines with distance from a trap). We x this by 4 to get a quick estimate of potential buffer widths. This differs across sessions a bit so we might choose to think about using the maximum (~300).
+
+
+```{r}
+
+initialsigma <- RPSV(CH_zero, CC = TRUE) 
+print(initialsigma)
+lapply(initialsigma, FUN = function(x) print(x*4))
+
+```
+
+The fitted detection function and esa.plot indicate that a 300 m buffer width is sufficient to encompass all individuals with any non-negligible probability of being captured. The estimated density reaches a plateau before 300m.
+
+## Plotting alternate model fits
+
+```{r}
+
+plot(fit.EX, limits = T, xval = 0:300)
+plot(fit.HN, limits = T, xval = 0:300)
+
+```
+## Population size estimate
+
+```{r}
+
+# Load habitat layer
+habitat_layer <- read_sf("Data/AOI_DISSOLVED.shp")
+
+# Transform so it has the same projection as the trap file
+habitat_layer <- st_transform(habitat_layer, crs = 7855)
+
+```
+
+
+
+```{r}
+
+# Area of the region is about 5,725 ha
+
+region.N(fit.EX,
+         region = habitat_layer
+         )
+
+```
+
+# References 
+
+Borchers, D. L., and M. G. Efford. 2008. Spatially explicit maximum likelihood methods for capture– recapture studies. Biometrics 64:377–385.
+
+Efford, M. 2022. A tutorial on fitting spatially explicit capture–recapture models in secr. <https://www.otago.ac.nz/density/pdfs/secr-tutorial.pdf>.
+
+Otis, D. L., K. P. Burnham, G. C. White, and D. R. Anderson. 1978. Statistical inference from capture data on closed animal populations. Wildlife Monographs:3–135.
+
+
+# Session information
+
+```{r}
+sessionInfo()
+
+```
+
+
 
