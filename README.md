@@ -16,6 +16,6 @@ The data/code presented here include:
 - covariates.csv : The Site and Season covariates for the Site and Season models. Ordered by the order that sessions are loaded into the capthist object in secr (alphabetical session names). 
 - Dunnar_Density.qmd : All code used to run the spatially explicit capture-recapture analysis within a Quarto document.
 - Dunnart_Density.html : All code used to run the spatially explicit capture-recapture analysis in html format.
-- Dunnart_Density.RPROJ : The associated R project for the analysis.
+- Dunnart_Density.Rproj : The associated R project for the analysis.
 
 Contact Charlotte Patterson at crpattrsn@gmail.com for queries.
