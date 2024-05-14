@@ -1,6 +1,6 @@
 # DunnartDensity
 
-<a href="https://zenodo.org/badge/latestdoi/618279716"><img src="https://zenodo.org/badge/618279716.svg" alt="DOI"></a>
+<a href="https://zenodo.org/badge/latestdoi/11189996"><img src="https://zenodo.org/badge/11189996.svg" alt="DOI"></a>
 
 The Julia Creek Dunnart (_Sminthopsis douglasi_) is an endangered small mammal found in central west Queensland, Australia. This project aims to provide the first population density and population size estimates for _S. douglasi_ within a national park. Density and population size are estimated via spatially explicit capture-recapture, using live capture data collected over seven trapping sessions between 2022 and 2023.  
 
