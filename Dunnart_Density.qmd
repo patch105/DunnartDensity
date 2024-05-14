@@ -129,7 +129,7 @@ Now we print an initial estimate of sigma, a spatial scale parameter influencing
 
 ```{r}
 
-initialsigma <- RPSV(CH_zero, CC = TRUE) 
+initialsigma <- RPSV(CH, CC = TRUE) 
 print(initialsigma)
 lapply(initialsigma, FUN = function(x) print(x*4))
 

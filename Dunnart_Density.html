@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Charlotte Patterson &amp; Alice Bakker">
+<meta name="author" content="Charlotte Patterson">
 
 <title>Julia Creek Dunnart Density Analysis</title>
 <style>
@@ -90,7 +90,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Charlotte Patterson &amp; Alice Bakker </p>
+             <p>Charlotte Patterson </p>
           </div>
   </div>
     
@@ -111,18 +111,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"secr"</span>, <span class="st">"here"</span>, <span class="st">"sf"</span>, <span class="st">"ggplot2"</span>, <span class="st">"dplyr"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"secr"</span>, <span class="st">"sf"</span>, <span class="st">"ggplot2"</span>, <span class="st">"dplyr"</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(packages, require, <span class="at">character.only =</span> T)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(packages, require, <span class="at">character.only =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="load-the-data" class="level1">
 <h1>Load the data</h1>
-<p>Load the capture file and the trap file. View these. Each session is a unique trapping period at one of the two sites (Scrammy, Campbells). Each row is a unique capture event. The ID for individual animals is in the column “ID”. The column “occasion” is the trap night for that session. The Detector is the unique ID for each trap.</p>
+<p>Load the capture file and the trap file. View these. Each session is a unique trapping period at one of the two sites (Scrammy - site A, Campbells - site B). Each row is a unique capture event. The ID for individual animals is in the column “ID”. The column “occasion” is the trap night for that session. The Detector is the unique ID for each trap. Some sessions caught zero individuals, these sessions are noted in the data with ID == “NONE”. Hence, the ‘No live releases’ comment in the code output.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CH_zero <span class="ot">&lt;-</span> <span class="fu">read.capthist</span>(<span class="st">"Data/captfile_zeros.txt"</span>, <span class="st">"Data/trapfile.txt"</span>, <span class="at">detector =</span> <span class="st">"multi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set order to make sure session-specific trap layouts match with sessions order at the two field sites (ordered by session name)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>CH <span class="ot">&lt;-</span> <span class="fu">read.capthist</span>(<span class="st">"Data/captfile_zeros.txt"</span>, <span class="fu">c</span>(<span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>), </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detector =</span> <span class="st">"multi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Session campbellsfive 
 No live releases
@@ -131,54 +132,47 @@ No live releases
 Session campbellsthree 
 No live releases</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>CH <span class="ot">&lt;-</span> <span class="fu">read.capthist</span>(<span class="st">"Data/captfile.txt"</span>, <span class="st">"Data/trapfile.txt"</span>, <span class="at">detector =</span> <span class="st">"multi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>No errors found :-)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set order to make sure session-specific trap layouts match with sessions order at the two field sites (ordered by session name)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>CH_zero <span class="ot">&lt;-</span> <span class="fu">read.capthist</span>(<span class="st">"Data/captfile_zeros.txt"</span>, <span class="fu">c</span>(<span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>), </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detector =</span> <span class="st">"multi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Session campbellsfive 
-No live releases
-Session campbellsfour 
-No live releases
-Session campbellsthree 
-No live releases</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>CH_zero <span class="ot">&lt;-</span> <span class="fu">read.capthist</span>(<span class="st">"Data/captfile.txt"</span>, <span class="fu">c</span>(<span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>), </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detector =</span> <span class="st">"multi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>No errors found :-)</code></pre>
-</div>
-</div>
+<section id="view-trapping-summary" class="level2">
+<h2 class="anchored" data-anchor-id="view-trapping-summary">View trapping summary</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CH, <span class="at">terse =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CH, <span class="at">terse =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           campbellsseven campbellssix campbellstwo scrammyfive scrammyfour
-Occasions               7            7            6           7           4
-Detections              9           15            3           4           2
-Animals                 6            9            3           4           1
-Detectors             200          200          200         200         200
-           scrammyseven scrammysix scrammythree scrammytwo
-Occasions             7          7            7          2
-Detections            8         28           12          2
-Animals               5         19            9          2
-Detectors           200        200          200        200</code></pre>
+<pre><code>           campbellsfive campbellsfour campbellsseven campbellssix
+Occasions              7             3              7            7
+Detections             0             0              9           15
+Animals                0             0              6            9
+Detectors            100           100            100          100
+           campbellsthree campbellstwo scrammyfive scrammyfour scrammyseven
+Occasions               7            6           7           4            7
+Detections              0            3           4           2            8
+Animals                 0            3           4           1            5
+Detectors             100          100         100         100          100
+           scrammysix scrammythree scrammytwo
+Occasions           7            7          2
+Detections         28           12          2
+Animals            19            9          2
+Detectors         100          100        100</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or view full summary output</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(CH)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or view full summary output</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(CH)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 </section>
 <section id="plot-recaptures" class="level1">
 <h1>Plot recaptures</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)) </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(CH_zero, <span class="at">tracks =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load only occasions with no zeros, just to plot recaptures</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>CH.no.zeros <span class="ot">&lt;-</span> <span class="fu">read.capthist</span>(<span class="st">"Data/captfile.txt"</span>, <span class="fu">c</span>(<span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_campbells_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>, <span class="st">"Data/trapfile_scrammy_MGA2020.txt"</span>), <span class="at">detector =</span> <span class="st">"multi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>No errors found :-)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)) </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(CH.no.zeros, <span class="at">tracks =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in plot.capthist(CH_zero, tracks = TRUE): screen layout does not allow
-for all sessions and some plots may be lost; set par mfrow</code></pre>
+<pre><code>Warning in plot.capthist(CH.no.zeros, tracks = TRUE): screen layout does not
+allow for all sessions and some plots may be lost; set par mfrow</code></pre>
 </div>
 <div class="cell-output-display">
 <p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
@@ -216,8 +210,8 @@ for all sessions and some plots may be lost; set par mfrow</code></pre>
 </div>
 <p>View successive trap-revealed movement distances, summarise with the median and a histogram. Observing that most individuals were showing movements &gt; 50 m (our trap spacing) suggests that even individuals with home range centres outside of the trapping grid would have had the opportunity to be caught (Efford, 2022).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">moves</span>(CH_zero)) </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">moves</span>(CH)) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>campbellsseven.21 campbellsseven.22  campbellsseven.4   campbellssix.11 
         261.83551          49.15844         203.51493          51.38980 
@@ -234,184 +228,237 @@ for all sessions and some plots may be lost; set par mfrow</code></pre>
    scrammythree.4 
          61.06169 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 61.19083</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="co"># reduce margins</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(m, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">550</span>,<span class="dv">30</span>), <span class="at">xlab =</span> <span class="st">"Movement (m)"</span>, <span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="co"># reduce margins</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(m, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">550</span>,<span class="dv">30</span>), <span class="at">xlab =</span> <span class="st">"Movement (m)"</span>, <span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="choosing-detection-function" class="level2">
 <h2 class="anchored" data-anchor-id="choosing-detection-function">Choosing detection function</h2>
-<p>We must check the effect of different detection function shapes. We do this by fitting models with the half-normal and exponential functions and comparing the estimated densities. We set the autoini = 6 to set our starting parameter values from a session with capture data. The default for a multi-session analysis is to take starting parameter values from the first session which doesn’t work when the session has no captures.</p>
-<p>We also compare model fit via AICc (Akaike’s Information Criterion).</p>
+<p>We must check the effect of different detection function shapes. We do this by fitting models with the half-normal and exponential functions and comparing the estimated densities. We set the autoini = 4 to set our starting parameter values from a session with capture data. The default for a multi-session analysis is to take starting parameter values from the first session which doesn’t work when the session has no captures.</p>
+<p>We also compare model fit via AICc (Akaike’s Corrected Information Criterion).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The half-normal</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fit.HN <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH_zero,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">detectfn =</span> <span class="st">'HN'</span>,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">buffer =</span> <span class="dv">300</span>,</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">6</span>),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">trace =</span> F)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Now the exponential</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>fit.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span> (CH_zero,</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">buffer =</span> <span class="dv">300</span>,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">6</span>),</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">trace =</span> <span class="cn">FALSE</span>,)</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Combine into an object of class secrlist</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">secrlist</span>(<span class="at">HN =</span> fit.HN, <span class="at">EX =</span> fit.EX)</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at the density values, g0 and sigma, plus SEs</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The half-normal</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>fit.HN <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">detectfn =</span> <span class="st">'HN'</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">trace =</span> F,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">verify =</span> F)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Now the exponential</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>fit.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span> (CH,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">trace =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verify =</span> F)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into an object of class secrlist</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">secrlist</span>(<span class="at">HN =</span> fit.HN, <span class="at">EX =</span> fit.EX)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at the density values, g0 and sigma, plus SEs</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$HN
+$HN$`session = campbellsfive`
+       link    estimate SE.estimate          lcl         ucl
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
+
+$HN$`session = campbellsfour`
+       link    estimate SE.estimate          lcl         ucl
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
+
 $HN$`session = campbellsseven`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = campbellssix`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
+
+$HN$`session = campbellsthree`
+       link    estimate SE.estimate          lcl         ucl
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = campbellstwo`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = scrammyfive`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = scrammyfour`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = scrammyseven`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = scrammysix`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = scrammythree`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 $HN$`session = scrammytwo`
        link    estimate SE.estimate          lcl         ucl
-D       log  0.33202500 0.064300035  0.227951195  0.48361494
-g0    logit  0.01618156 0.004387746  0.009492003  0.02745496
-sigma   log 68.01014395 8.308833941 53.575581980 86.33372721
+D       log  0.25278228 0.049001004  0.173485552  0.36832392
+g0    logit  0.01614012 0.004374698  0.009469833  0.02737889
+sigma   log 68.00529187 8.301303020 53.582354879 86.31049779
 
 
 $EX
+$EX$`session = campbellsfive`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
+
+$EX$`session = campbellsfour`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
+
 $EX$`session = campbellsseven`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = campbellssix`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
+
+$EX$`session = campbellsthree`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = campbellstwo`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = scrammyfive`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = scrammyfour`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = scrammyseven`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = scrammysix`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = scrammythree`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166
 
 $EX$`session = scrammytwo`
        link    estimate SE.estimate         lcl         ucl
-D       log  0.34777427  0.06755423  0.23849671  0.50712205
-g0    logit  0.05377493  0.01705575  0.02861917  0.09879332
-sigma   log 36.44931760  5.64299936 26.95801436 49.28229268</code></pre>
+D       log  0.26474222  0.05148000  0.18148371  0.38619688
+g0    logit  0.05360549  0.01699071  0.02854197  0.09844762
+sigma   log 36.45743458  5.63924819 26.97115032 49.28023166</code></pre>
 </div>
 </div>
 <p>The density estimates are similar. The difference is in the detection parameters g0 and sigma.</p>
+</section>
+<section id="plotting-alternate-model-fits" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-alternate-model-fits">Plotting alternate model fits</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit.EX, <span class="at">limits =</span> T, <span class="at">xval =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit.HN, <span class="at">limits =</span> T, <span class="at">xval =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 <p>Apply AICc.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(fits,<span class="at">criterion =</span> <span class="st">'AICc'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(fits,<span class="at">criterion =</span> <span class="st">'AICc'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>              model    detectfn npar    logLik     AIC    AICc dAICc AICcwt
-EX D~1 g0~1 sigma~1 exponential    3 -478.8920 963.784 964.228 0.000 0.9853
-HN D~1 g0~1 sigma~1  halfnormal    3 -483.0948 972.190 972.634 8.406 0.0147</code></pre>
+<pre><code>              model    detectfn npar    logLik      AIC     AICc dAICc AICcwt
+EX D~1 g0~1 sigma~1 exponential    3 -494.8180  995.636  996.081 0.000 0.9852
+HN D~1 g0~1 sigma~1  halfnormal    3 -499.0163 1004.033 1004.477 8.396 0.0148</code></pre>
 </div>
 </div>
 <p>The most-supported model is the exponential, with an AICc weight of 0.99 and a ΔAICc from the exponential to the half-normal of 8.4.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">esa.plot</span>(fits)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">300</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
 </section>
-<section id="choosing-buffer-width-option-without-mask" class="level2">
-<h2 class="anchored" data-anchor-id="choosing-buffer-width-option-without-mask">Choosing Buffer Width (option without mask)</h2>
-<p>Now we print an initial estimate of sigma (a measure of home range shape - how much the probability of capture declines with distance from a trap). We x this by 4 to get a quick estimate of potential buffer widths. This differs across sessions a bit so we might choose to think about using the maximum (~300).</p>
+<section id="choosing-buffer-width" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-buffer-width">Choosing Buffer Width</h2>
+<p>Now we print an initial estimate of sigma, a spatial scale parameter influencing the shape of the decline in capture probability with distance from the home range centre. The ‘RPSV’ function uses an approximation from a circular bivariate normal distribution to estimate sigma. 4 x sigma is suitable as an initial rule-of thumb buffer width, although it fails to account for a truncation of movements at the edge of the trapping grid (Efford, 2022). This potential buffer width differs across sessions so we choose to use the maximum (~300).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>initialsigma <span class="ot">&lt;-</span> <span class="fu">RPSV</span>(CH_zero, <span class="at">CC =</span> <span class="cn">TRUE</span>) </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(initialsigma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>initialsigma <span class="ot">&lt;-</span> <span class="fu">RPSV</span>(CH, <span class="at">CC =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(initialsigma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$campbellsseven
+<pre><code>$campbellsfive
+[1] NA
+
+$campbellsfour
+[1] NA
+
+$campbellsseven
 [1] 108.4343
 
 $campbellssix
 [1] 27.85704
+
+$campbellsthree
+[1] NA
 
 $campbellstwo
 [1] NaN
@@ -434,10 +481,13 @@ $scrammythree
 $scrammytwo
 [1] NaN</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(initialsigma, <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">print</span>(x<span class="sc">*</span><span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(initialsigma, <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">print</span>(x<span class="sc">*</span><span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 433.7371
+<pre><code>[1] NA
+[1] NA
+[1] 433.7371
 [1] 111.4282
+[1] NA
 [1] NaN
 [1] NaN
 [1] 122.3823
@@ -447,12 +497,21 @@ $scrammytwo
 [1] NaN</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$campbellsseven
+<pre><code>$campbellsfive
+[1] NA
+
+$campbellsfour
+[1] NA
+
+$campbellsseven
 [1] 433.7371
 
 $campbellssix
 [1] 111.4282
 
+$campbellsthree
+[1] NA
+
 $campbellstwo
 [1] NaN
 
@@ -475,84 +534,752 @@ $scrammytwo
 [1] NaN</code></pre>
 </div>
 </div>
-<p>The fitted detection function and esa.plot indicate that a 300 m buffer width is sufficient to encompass all individuals with any non-negligible probability of being captured. The estimated density reaches a plateau before 300m.</p>
-</section>
-<section id="plotting-alternate-model-fits" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-alternate-model-fits">Plotting alternate model fits</h2>
+<p>We check this further by plotting the decline in detection probability when we fit a simple model, and the decline in estimated density with increasing buffer width.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit.EX, <span class="at">limits =</span> T, <span class="at">xval =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">esa.plot</span>(fit.EX)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">300</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit.HN, <span class="at">limits =</span> T, <span class="at">xval =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Dunnart_Density_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+<p>The fitted detection function and esa.plot indicate that a 300 m buffer width is sufficient to encompass all individuals with any non-negligible probability of being captured. The estimated density reaches a plateau before 300m.</p>
+</section>
+<section id="fitting-alternate-models" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-alternate-models">Fitting alternate models</h2>
+<p>We have selected a set of candidate models for comparison via AICc. The first ‘fit.EX’ is our original null model with the exponential detection function. We will compare this to a model where density varies by site ‘fit.site.D.EX’, where density and g0 vary by site ‘fit.site.D.g0.EX’, where only g0 varies by site ‘fit.site.g0.EX’, where density varies by season ‘fit.season.D.EX’, where density and g0 vary by season ‘fit.season.D.g0.EX’, and where only g0 varies by season ‘fit.season.g0.EX’.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># null model</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.EX</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load covariate information</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>covariates <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Data/covariates.csv"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Site models</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>fit.site.D.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="fu">list</span>(D <span class="sc">~</span> site, g0 <span class="sc">~</span> <span class="dv">1</span>, sigma <span class="sc">~</span><span class="dv">1</span>), </span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verify =</span> F,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sessioncov =</span> covariates)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>fit.site.D.g0.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="fu">list</span>(D <span class="sc">~</span> site, g0 <span class="sc">~</span> site, sigma <span class="sc">~</span><span class="dv">1</span>), </span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verify =</span> F,</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sessioncov =</span> covariates)</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>fit.site.g0.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>                    <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="fu">list</span>(D <span class="sc">~</span> <span class="dv">1</span>, g0 <span class="sc">~</span> site, sigma <span class="sc">~</span><span class="dv">1</span>), </span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>                    <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verify =</span> F,</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sessioncov =</span> covariates)</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Season models</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>fit.season.D.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>                    <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="fu">list</span>(D <span class="sc">~</span> season, g0 <span class="sc">~</span> <span class="dv">1</span>, sigma <span class="sc">~</span><span class="dv">1</span>), </span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>                    <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verify =</span> F,</span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sessioncov =</span> covariates)</span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a>fit.season.D.g0.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a>                    <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="fu">list</span>(D <span class="sc">~</span> season, g0 <span class="sc">~</span> season, sigma <span class="sc">~</span><span class="dv">1</span>), </span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>                    <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verify =</span> F,</span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sessioncov =</span> covariates)</span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a>fit.season.g0.EX <span class="ot">&lt;-</span> <span class="fu">secr.fit</span>(CH,</span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a>                    <span class="at">detectfn =</span> <span class="st">'EX'</span>,</span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a>                    <span class="at">buffer =</span> <span class="dv">300</span>,</span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="fu">list</span>(D <span class="sc">~</span> <span class="dv">1</span>, g0 <span class="sc">~</span> season, sigma <span class="sc">~</span><span class="dv">1</span>), </span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a>                    <span class="at">details =</span> <span class="fu">list</span>(<span class="at">autoini =</span> <span class="dv">4</span>),</span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a>                    <span class="at">trace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verify =</span> F,</span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sessioncov =</span> covariates)</span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Now combining to compare via AICc</span></span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">secrlist</span>(<span class="at">EX =</span> fit.EX,</span>
+<span id="cb29-65"><a href="#cb29-65" aria-hidden="true" tabindex="-1"></a>                 <span class="at">site.D =</span> fit.site.D.EX,</span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a>                 <span class="at">site.D.g0 =</span> fit.site.D.g0.EX,</span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a>                 <span class="at">site.g0 =</span> fit.site.g0.EX,</span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a>                 <span class="at">season.D =</span> fit.season.D.EX,</span>
+<span id="cb29-69"><a href="#cb29-69" aria-hidden="true" tabindex="-1"></a>                 <span class="at">season.D.g0 =</span> fit.season.D.g0.EX,</span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a>                 <span class="at">season.g0 =</span> fit.season.g0.EX</span>
+<span id="cb29-71"><a href="#cb29-71" aria-hidden="true" tabindex="-1"></a>                 )</span>
+<span id="cb29-72"><a href="#cb29-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-73"><a href="#cb29-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-74"><a href="#cb29-74" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(fits,<span class="at">criterion =</span> <span class="st">'AICc'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                 model    detectfn npar    logLik     AIC
+site.D             D~site g0~1 sigma~1 exponential    4 -489.8558 987.712
+site.D.g0       D~site g0~site sigma~1 exponential    5 -489.6567 989.313
+season.D         D~season g0~1 sigma~1 exponential    4 -492.6841 993.368
+site.g0            D~1 g0~site sigma~1 exponential    4 -492.9064 993.813
+season.g0        D~1 g0~season sigma~1 exponential    4 -493.4547 994.909
+EX                    D~1 g0~1 sigma~1 exponential    3 -494.8180 995.636
+season.D.g0 D~season g0~season sigma~1 exponential    5 -492.6557 995.311
+               AICc dAICc AICcwt
+site.D      988.466 0.000 0.6485
+site.D.g0   990.467 2.001 0.2385
+season.D    994.123 5.657 0.0383
+site.g0     994.568 6.102 0.0307
+season.g0   995.664 7.198 0.0177
+EX          996.081 7.615 0.0144
+season.D.g0 996.465 7.999 0.0119</code></pre>
 </div>
 </div>
+<p>It appears that the model for site-specific density has the greatest support, with an AICc weight of 0.65 and a ΔAICc from the site-specific density model to the site-specific density and g0 of 2.001. We will use this model to estimate density and population size.</p>
+<p>We will examine the coefficients and the density, g0, and sigma estimates for the site-specific density model, but will also look at the site-specific density and g0 model to check if there’s any large difference between the outputs of these since they were close in the AICc.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.site.D.EX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$versiontime
+[1] "4.6.4, run 09:06:55 15 May 2024, elapsed 57.85 s"
+
+$capthist
+           campbellsfive campbellsfour campbellsseven campbellssix
+Occasions              7             3              7            7
+Detections             0             0              9           15
+Animals                0             0              6            9
+Detectors            100           100            100          100
+Moves                  0             0              3            6
+Animals2               0             0              2            5
+           campbellsthree campbellstwo scrammyfive scrammyfour scrammyseven
+Occasions               7            6           7           4            7
+Detections              0            3           4           2            8
+Animals                 0            3           4           1            5
+Detectors             100          100         100         100          100
+Moves                   0            0           0           1            3
+Animals2                0            0           0           1            1
+           scrammysix scrammythree scrammytwo
+Occasions           7            7          2
+Detections         28           12          2
+Animals            19            9          2
+Detectors         100          100        100
+Moves               7            3          0
+Animals2            5            2          0
+
+$trapsummary
+$trapsummary$campbellsfive
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellsfour
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellsseven
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellssix
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellsthree
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellstwo
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$scrammyfive
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammyfour
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammyseven
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammysix
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammythree
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammytwo
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+
+$detector
+ campbellsfive  campbellsfour campbellsseven   campbellssix campbellsthree 
+       "multi"        "multi"        "multi"        "multi"        "multi" 
+  campbellstwo    scrammyfive    scrammyfour   scrammyseven     scrammysix 
+       "multi"        "multi"        "multi"        "multi"        "multi" 
+  scrammythree     scrammytwo 
+       "multi"        "multi" 
+
+$mask
+               Cells  Spacing     Area
+campbellsfive   2633 19.77168 102.9291
+campbellsfour   2633 19.77168 102.9291
+campbellsseven  2633 19.77168 102.9291
+campbellssix    2633 19.77168 102.9291
+campbellsthree  2633 19.77168 102.9291
+campbellstwo    2633 19.77168 102.9291
+scrammyfive     3124 18.39436 105.7013
+scrammyfour     3124 18.39436 105.7013
+scrammyseven    3124 18.39436 105.7013
+scrammysix      3124 18.39436 105.7013
+scrammythree    3124 18.39436 105.7013
+scrammytwo      3124 18.39436 105.7013
+
+$modeldetails
+    CL fixed distribution hcov
+ FALSE  none      poisson     
+
+$AICtable
+               model    detectfn npar    logLik     AIC    AICc
+ D~site g0~1 sigma~1 exponential    4 -489.8558 987.712 988.466
+
+$coef
+                   beta   SE.beta        lcl       ucl
+D             -1.829052 0.2740274 -2.3661358 -1.291968
+D.sitescrammy  0.858397 0.2838386  0.3020835  1.414711
+g0            -2.880786 0.3351730 -3.5377133 -2.223859
+sigma          3.596043 0.1538953  3.2944132  3.897672
+
+$predicted
+$predicted$`session = campbellsfive, site = campbell`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.16056572  0.04483847  0.09384265  0.27472957
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = campbellsfour, site = campbell`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.16056572  0.04483847  0.09384265  0.27472957
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = campbellsseven, site = campbell`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.16056572  0.04483847  0.09384265  0.27472957
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = campbellssix, site = campbell`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.16056572  0.04483847  0.09384265  0.27472957
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = campbellsthree, site = campbell`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.16056572  0.04483847  0.09384265  0.27472957
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = campbellstwo, site = campbell`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.16056572  0.04483847  0.09384265  0.27472957
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = scrammyfive, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.37883486  0.08184002  0.24926253  0.57576184
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = scrammyfour, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.37883486  0.08184002  0.24926253  0.57576184
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = scrammyseven, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.37883486  0.08184002  0.24926253  0.57576184
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = scrammysix, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.37883486  0.08184002  0.24926253  0.57576184
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = scrammythree, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.37883486  0.08184002  0.24926253  0.57576184
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757
+
+$predicted$`session = scrammytwo, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.37883486  0.08184002  0.24926253  0.57576184
+g0    logit  0.05311158  0.01685610  0.02825801  0.09762828
+sigma   log 36.45368506  5.64343343 26.96158930 49.28756757</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.site.D.g0.EX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$versiontime
+[1] "4.6.4, run 09:07:53 15 May 2024, elapsed 158.67 s"
+
+$capthist
+           campbellsfive campbellsfour campbellsseven campbellssix
+Occasions              7             3              7            7
+Detections             0             0              9           15
+Animals                0             0              6            9
+Detectors            100           100            100          100
+Moves                  0             0              3            6
+Animals2               0             0              2            5
+           campbellsthree campbellstwo scrammyfive scrammyfour scrammyseven
+Occasions               7            6           7           4            7
+Detections              0            3           4           2            8
+Animals                 0            3           4           1            5
+Detectors             100          100         100         100          100
+Moves                   0            0           0           1            3
+Animals2                0            0           0           1            1
+           scrammysix scrammythree scrammytwo
+Occasions           7            7          2
+Detections         28           12          2
+Animals            19            9          2
+Detectors         100          100        100
+Moves               7            3          0
+Animals2            5            2          0
+
+$trapsummary
+$trapsummary$campbellsfive
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellsfour
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellsseven
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellssix
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellsthree
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$campbellstwo
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    49.28565 m 
+x-range            94374.94 95040.33 m 
+y-range            7506019 7506626 m 
+
+$trapsummary$scrammyfive
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammyfour
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammyseven
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammysix
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammythree
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+$trapsummary$scrammytwo
+Object class       traps 
+Detector type      multi 
+Detector number    100 
+Average spacing    48.22375 m 
+x-range            93176.2 93753.44 m 
+y-range            7502926 7503611 m 
+
+
+$detector
+ campbellsfive  campbellsfour campbellsseven   campbellssix campbellsthree 
+       "multi"        "multi"        "multi"        "multi"        "multi" 
+  campbellstwo    scrammyfive    scrammyfour   scrammyseven     scrammysix 
+       "multi"        "multi"        "multi"        "multi"        "multi" 
+  scrammythree     scrammytwo 
+       "multi"        "multi" 
+
+$mask
+               Cells  Spacing     Area
+campbellsfive   2633 19.77168 102.9291
+campbellsfour   2633 19.77168 102.9291
+campbellsseven  2633 19.77168 102.9291
+campbellssix    2633 19.77168 102.9291
+campbellsthree  2633 19.77168 102.9291
+campbellstwo    2633 19.77168 102.9291
+scrammyfive     3124 18.39436 105.7013
+scrammyfour     3124 18.39436 105.7013
+scrammyseven    3124 18.39436 105.7013
+scrammysix      3124 18.39436 105.7013
+scrammythree    3124 18.39436 105.7013
+scrammytwo      3124 18.39436 105.7013
+
+$modeldetails
+    CL fixed distribution hcov
+ FALSE  none      poisson     
+
+$AICtable
+                  model    detectfn npar    logLik     AIC    AICc
+ D~site g0~site sigma~1 exponential    5 -489.6567 989.313 990.467
+
+$coef
+                     beta   SE.beta        lcl        ucl
+D              -1.9397111 0.3136481 -2.5544502 -1.3249721
+D.sitescrammy   1.0283885 0.3865542  0.2707562  1.7860207
+g0             -2.6962052 0.4363841 -3.5515023 -1.8409081
+g0.sitescrammy -0.2736482 0.4289633 -1.1144007  0.5671044
+sigma           3.5955975 0.1536153  3.2945171  3.8966779
+
+$predicted
+$predicted$`session = campbellsfive, site = campbell`
+       link    estimate SE.estimate         lcl        ucl
+D       log  0.14374547  0.04621738  0.07773496  0.2658104
+g0    logit  0.06319765  0.02583556  0.02788183  0.1369439
+sigma   log 36.43746595  5.63053531 26.96439051 49.2386032
+
+$predicted$`session = campbellsfour, site = campbell`
+       link    estimate SE.estimate         lcl        ucl
+D       log  0.14374547  0.04621738  0.07773496  0.2658104
+g0    logit  0.06319765  0.02583556  0.02788183  0.1369439
+sigma   log 36.43746595  5.63053531 26.96439051 49.2386032
+
+$predicted$`session = campbellsseven, site = campbell`
+       link    estimate SE.estimate         lcl        ucl
+D       log  0.14374547  0.04621738  0.07773496  0.2658104
+g0    logit  0.06319765  0.02583556  0.02788183  0.1369439
+sigma   log 36.43746595  5.63053531 26.96439051 49.2386032
+
+$predicted$`session = campbellssix, site = campbell`
+       link    estimate SE.estimate         lcl        ucl
+D       log  0.14374547  0.04621738  0.07773496  0.2658104
+g0    logit  0.06319765  0.02583556  0.02788183  0.1369439
+sigma   log 36.43746595  5.63053531 26.96439051 49.2386032
+
+$predicted$`session = campbellsthree, site = campbell`
+       link    estimate SE.estimate         lcl        ucl
+D       log  0.14374547  0.04621738  0.07773496  0.2658104
+g0    logit  0.06319765  0.02583556  0.02788183  0.1369439
+sigma   log 36.43746595  5.63053531 26.96439051 49.2386032
+
+$predicted$`session = campbellstwo, site = campbell`
+       link    estimate SE.estimate         lcl        ucl
+D       log  0.14374547  0.04621738  0.07773496  0.2658104
+g0    logit  0.06319765  0.02583556  0.02788183  0.1369439
+sigma   log 36.43746595  5.63053531 26.96439051 49.2386032
+
+$predicted$`session = scrammyfive, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.40199217  0.09747522  0.25162794  0.64220891
+g0    logit  0.04880653  0.01703563  0.02438572  0.09529452
+sigma   log 36.43746595  5.63053531 26.96439051 49.23860320
+
+$predicted$`session = scrammyfour, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.40199217  0.09747522  0.25162794  0.64220891
+g0    logit  0.04880653  0.01703563  0.02438572  0.09529452
+sigma   log 36.43746595  5.63053531 26.96439051 49.23860320
+
+$predicted$`session = scrammyseven, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.40199217  0.09747522  0.25162794  0.64220891
+g0    logit  0.04880653  0.01703563  0.02438572  0.09529452
+sigma   log 36.43746595  5.63053531 26.96439051 49.23860320
+
+$predicted$`session = scrammysix, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.40199217  0.09747522  0.25162794  0.64220891
+g0    logit  0.04880653  0.01703563  0.02438572  0.09529452
+sigma   log 36.43746595  5.63053531 26.96439051 49.23860320
+
+$predicted$`session = scrammythree, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.40199217  0.09747522  0.25162794  0.64220891
+g0    logit  0.04880653  0.01703563  0.02438572  0.09529452
+sigma   log 36.43746595  5.63053531 26.96439051 49.23860320
+
+$predicted$`session = scrammytwo, site = scrammy`
+       link    estimate SE.estimate         lcl         ucl
+D       log  0.40199217  0.09747522  0.25162794  0.64220891
+g0    logit  0.04880653  0.01703563  0.02438572  0.09529452
+sigma   log 36.43746595  5.63053531 26.96439051 49.23860320</code></pre>
+</div>
+</div>
+<p>The positive coefficient for site indicates an increase in density at Scrammy (Site A). The density estimate is also higher there. The two models mostly give similar estimates, so we are confident that our results change very little with the two models.</p>
 </section>
 <section id="population-size-estimate" class="level2">
 <h2 class="anchored" data-anchor-id="population-size-estimate">Population size estimate</h2>
+<p>First load the habitat layer and transform it to the same projection as the trap file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load habitat layer</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>habitat_layer <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"Data/AOI_DISSOLVED.shp"</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform so it has the same projection as the trap file</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>habitat_layer <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(habitat_layer, <span class="at">crs =</span> <span class="dv">7855</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load habitat layer</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>habitat_layer <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"Data/AOI_DISSOLVED.shp"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform so it has the same projection as the trap file</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>habitat_layer <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(habitat_layer, <span class="at">crs =</span> <span class="dv">7855</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Then use the ‘region.N’ function to estimate the population size within the habitat layer.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Area of the region is about 5,725 ha</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">region.N</span>(fit.EX,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">region =</span> habitat_layer</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>         )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">region.N</span>(fit.site.D.EX,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">region =</span> habitat_layer</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>         )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$campbellsseven
+<pre><code>$campbellsfive
     estimate SE.estimate      lcl      ucl n
-E.N 1998.150    388.1353 1370.292 2913.689 6
-R.N 1996.927    385.5527 1372.881 2905.878 6
+E.N 922.5363    252.8003 544.4276 1563.244 0
+R.N 919.2271    250.9690 543.4887 1554.731 0
+
+$campbellsfour
+    estimate SE.estimate      lcl      ucl n
+E.N 922.5363    252.8003 544.4276 1563.244 0
+R.N 920.7600    250.9690 544.8548 1556.009 0
+
+$campbellsseven
+    estimate SE.estimate      lcl      ucl n
+E.N 922.5363    252.8003 544.4276 1563.244 6
+R.N 925.2271    250.9690 549.4887 1560.731 6
 
 $campbellssix
     estimate SE.estimate      lcl      ucl n
-E.N 1998.150    388.1353 1370.292 2913.689 9
-R.N 1999.927    385.5527 1375.881 2908.878 9
+E.N 922.5363    252.8003 544.4276 1563.244 9
+R.N 928.2271    250.9690 552.4887 1563.731 9
+
+$campbellsthree
+    estimate SE.estimate      lcl      ucl n
+E.N 922.5363    252.8003 544.4276 1563.244 0
+R.N 919.2271    250.9690 543.4887 1554.731 0
 
 $campbellstwo
     estimate SE.estimate      lcl      ucl n
-E.N 1998.150    388.1353 1370.292 2913.689 3
-R.N 1994.617    385.5527 1370.530 2903.512 3
+E.N 922.5363    252.8003 544.4276 1563.244 3
+R.N 922.5446    250.9690 546.7716 1557.995 3
 
 $scrammyfive
     estimate SE.estimate      lcl      ucl n
-E.N 1997.547    388.0183 1369.878 2912.810 4
-R.N 1994.213    385.4356 1370.364 2902.898 4
+E.N 2175.953    464.7230 1438.401 3291.692 4
+R.N 2172.027    462.3759 1437.981 3281.826 4
 
 $scrammyfour
     estimate SE.estimate      lcl      ucl n
-E.N 1997.547    388.0183 1369.878 2912.810 1
-R.N 1993.620    385.4356 1369.626 2902.109 1
+E.N 2175.953    464.7230 1438.401 3291.692 1
+R.N 2171.636    462.3759 1437.405 3281.176 1
 
 $scrammyseven
     estimate SE.estimate      lcl      ucl n
-E.N 1997.547    388.0183 1369.878 2912.810 5
-R.N 1995.213    385.4356 1371.364 2903.898 5
+E.N 2175.953    464.7230 1438.401 3291.692 5
+R.N 2173.027    462.3759 1438.981 3282.826 5
 
 $scrammysix
     estimate SE.estimate      lcl      ucl  n
-E.N 1997.547    388.0183 1369.878 2912.810 19
-R.N 2009.213    385.4356 1385.364 2917.898 19
+E.N 2175.953    464.7230 1438.401 3291.692 19
+R.N 2187.027    462.3759 1452.981 3296.826 19
 
 $scrammythree
     estimate SE.estimate      lcl      ucl n
-E.N 1997.547    388.0183 1369.878 2912.810 9
-R.N 1999.213    385.4356 1375.364 2907.898 9
+E.N 2175.953    464.7230 1438.401 3291.692 9
+R.N 2177.027    462.3759 1442.981 3286.826 9
 
 $scrammytwo
     estimate SE.estimate      lcl      ucl n
-E.N 1997.547    388.0183 1369.878 2912.810 2
-R.N 1996.776    385.4356 1372.653 2905.091 2</code></pre>
+E.N 2175.953    464.7230 1438.401 3291.692 2
+R.N 2174.967    462.3759 1440.570 3284.276 2</code></pre>
 </div>
 </div>
 </section>
+<section id="calculate-the-average-population-size" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-the-average-population-size">Calculate the average population size</h2>
+<p>The above result outputs two estimates, one based on the Site A (Scrammy) density estimate and one based on the Site B (Campbell) density estimate.</p>
+<p>We standardise the mean population size by weighting each estimate by the inverse of the variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>SiteA <span class="ot">&lt;-</span> <span class="fl">2175.953</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>SiteA_SE <span class="ot">&lt;-</span> <span class="fl">462.3759</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>SiteB <span class="ot">&lt;-</span> <span class="fl">922.5362</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>SiteB_SE <span class="ot">&lt;-</span> <span class="fl">252.8003</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>wA <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(SiteA_SE<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>wB <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(SiteB_SE<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> (wA<span class="sc">*</span>SiteA <span class="sc">+</span> wB<span class="sc">*</span>SiteB)<span class="sc">/</span>(wA <span class="sc">+</span> wB)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">/</span>(wA <span class="sc">+</span> wB))</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>CI <span class="ot">&lt;-</span> <span class="fl">1.96</span><span class="sc">*</span>SE</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"Mean Population size is "</span>, <span class="fu">round</span>(N,<span class="dv">2</span>), <span class="st">" with a standard error of "</span>, <span class="fu">round</span>(SE,<span class="dv">2</span>), <span class="st">"and a 95% CI of "</span>, <span class="fu">round</span>(N <span class="sc">-</span> CI,<span class="dv">2</span>), <span class="st">" to "</span>, <span class="fu">round</span>(N <span class="sc">+</span> CI,<span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Mean Population size is 1210.99 with a standard error of 221.81and a 95% CI of 776.24 to 1645.74"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Borchers, D. L., and M. G. Efford. 2008. Spatially explicit maximum likelihood methods for capture– recapture studies. Biometrics 64:377–385.</p>
+<p>Efford, M. 2022. A tutorial on fitting spatially explicit capture–recapture models in secr. <a href="https://www.otago.ac.nz/density/pdfs/secr-tutorial.pdf" class="uri">https://www.otago.ac.nz/density/pdfs/secr-tutorial.pdf</a>.</p>
+<p>Otis, D. L., K. P. Burnham, G. C. White, and D. R. Anderson. 1978. Statistical inference from capture data on closed animal populations. Wildlife Monographs:3–135.</p>
+</section>
+<section id="session-information" class="level1">
+<h1>Session information</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Brisbane
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] dplyr_1.1.4   ggplot2_3.5.1 sf_1.0-14     secr_4.6.4    purrr_1.0.2  
+
+loaded via a namespace (and not attached):
+ [1] utf8_1.2.4          generics_0.1.3      class_7.3-22       
+ [4] KernSmooth_2.23-22  stringi_1.7.12      lattice_0.21-9     
+ [7] digest_0.6.33       magrittr_2.0.3      evaluate_0.23      
+[10] grid_4.3.2          fastmap_1.1.1       jsonlite_1.8.7     
+[13] Matrix_1.6-1.1      e1071_1.7-13        DBI_1.2.1          
+[16] mgcv_1.9-1          fansi_1.0.6         scales_1.3.0       
+[19] codetools_0.2-19    abind_1.4-5         cli_3.6.1          
+[22] rlang_1.1.1         units_0.8-4         munsell_0.5.1      
+[25] splines_4.3.2       withr_3.0.0         yaml_2.3.8         
+[28] RcppNumerical_0.6-0 tools_4.3.2         raster_3.6-26      
+[31] parallel_4.3.2      colorspace_2.1-0    vctrs_0.6.5        
+[34] R6_2.5.1            proxy_0.4-27        lifecycle_1.0.4    
+[37] classInt_0.4-10     stringr_1.5.0       htmlwidgets_1.6.2  
+[40] MASS_7.3-60         pkgconfig_2.0.3     gtable_0.3.5       
+[43] RcppParallel_5.1.7  terra_1.7-55        pillar_1.9.0       
+[46] glue_1.6.2          Rcpp_1.0.11         xfun_0.43          
+[49] tibble_3.2.1        tidyselect_1.2.1    rstudioapi_0.15.0  
+[52] knitr_1.46          htmltools_0.5.6.1   nlme_3.1-163       
+[55] rmarkdown_2.25      compiler_4.3.2      sp_2.1-1           </code></pre>
+</div>
+</div>
 </section>
 
 </main>
