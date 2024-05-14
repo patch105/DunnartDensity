@@ -14,7 +14,8 @@ The data/code presented here include:
 - trapfile_scrammy_MGA2020.txt : The coordinates of traps in the scrammy grid (Site A) in the GDA 2020 / MGA 2020 Zone 55 projection (EPSG:7855). The 'Detector' column matches the IDs within the captfile.
 - AOI_DISSOLVED.shp (and associated files) : The shapefile for the habitat mask, used to calculate the population size of _S. douglasi_ within Bladensburg National Park.
 - covariates.csv : The Site and Season covariates for the Site and Season models. Ordered by the order that sessions are loaded into the capthist object in secr (alphabetical session names). 
-- Dunnar_Density.qmd : All code used to run the spatially explicit capture-recapture analysis within a Quarto document
-- Dunnart_Density.html : All code used to run the spatially explicit capture-recapture analysis in html format
+- Dunnar_Density.qmd : All code used to run the spatially explicit capture-recapture analysis within a Quarto document.
+- Dunnart_Density.html : All code used to run the spatially explicit capture-recapture analysis in html format.
+- Dunnart_Density.RPROJ : The associated R project for the analysis.
 
 Contact Charlotte Patterson at crpattrsn@gmail.com for queries.
