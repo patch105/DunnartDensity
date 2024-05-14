@@ -150,7 +150,7 @@ The fitted detection function and esa.plot indicate that a 300 m buffer width is
 
 ## Fitting alternate models
 
-We have selected a set of candidate models for comparison via AICc. The first 'fit.EX' is our original null model with the exponential detection function. We will compare this to a model where density varies by site 'fit.site.D.EX', where density and g0 vary by site 'fit.site.D.g0.EX', where only g0 varies by site 'fit.site.g0.EX', where density varies by season 'fit.season.D.EX', where density and g0 vary by season 'fit.season.D.g0.EX', and where only g0 varies by season 'fit.season.g0.EX'. We also fit a model where density varies by site and g0 varies by a behavioural step-change 'fit.site.D.B.g0.EX'.
+We have selected a set of candidate models for comparison via AICc. The first 'fit.EX' is our original null model with the exponential detection function. We will compare this to a model where density varies by site 'fit.site.D.EX', where density and g0 vary by site 'fit.site.D.g0.EX', where only g0 varies by site 'fit.site.g0.EX', where density varies by season 'fit.season.D.EX', where density and g0 vary by season 'fit.season.D.g0.EX', and where only g0 varies by season 'fit.season.g0.EX'. 
 
 ```{r}
 #null model
@@ -215,16 +215,6 @@ fit.season.g0.EX <- secr.fit(CH,
                     verify = F,
                     sessioncov = covariates)
 
-#B - transient behavioural step-change
-fit.site.D.B.g0.EX <- secr.fit(CH,
-                    detectfn = 'EX',
-                    buffer = 300,
-                    model = list(D ~ site, g0 ~ B, sigma ~1), 
-                    details = list(autoini = 4),
-                    trace = FALSE, 
-                    verify = F,
-                    sessioncov = covariates)
-
 # Now combining to compare via AICc
 fits <- secrlist(EX = fit.EX,
                  site.D = fit.site.D.EX,
@@ -232,8 +222,8 @@ fits <- secrlist(EX = fit.EX,
                  site.g0 = fit.site.g0.EX,
                  season.D = fit.season.D.EX,
                  season.D.g0 = fit.season.D.g0.EX,
-                 season.g0 = fit.season.g0.EX,
-                 site.D.B.g0 = fit.site.D.bk.g0.EX)
+                 season.g0 = fit.season.g0.EX
+                 )
 
 
 AIC(fits,criterion = 'AICc')
@@ -250,7 +240,17 @@ summary(fit.site.D.g0.EX)
 
 ```
 
-The positive coefficient for site indicates an increase in density at Scrammy (Site A). The density estimate is also higher there. The two models mostly give similar estimates, so we are confident that our results change very little with the two models. 
+The positive coefficient for site indicates an increase in density at Scrammy (Site A). The density estimate is also higher there. The two models mostly give similar estimates, so we are confident that our results change very little with the two models.
+
+Now we will extract the values of g0 for alternate states of parameter B (captured 1, or not captured 0).
+
+```{r}
+
+predict(fit.site.D.B.g0.EX, newdata = data.frame(B = 0:1), realnames = "g0")
+
+```
+
+
 ## Population size estimate
 
 First load the habitat layer and transform it to the same projection as the trap file. 
@@ -291,6 +291,10 @@ wB <- 1/(SiteB_SE^2)
 N <- (wA*SiteA + wB*SiteB)/(wA + wB)
 
 SE <- sqrt(1/(wA + wB))
+CI <- 1.96*SE
+
+print(paste0("Mean Population size is ", round(N,2), " with a standard error of ", round(SE,2)))
+
   
 ```
 
