@@ -78,7 +78,7 @@ We must check the effect of different detection function shapes. We do this by f
 We also compare model fit via AICc (Akaike's Corrected Information Criterion).
 
 ```{r}
-#The half-normal
+# The half-normal
 fit.HN <- secr.fit(CH,
                 detectfn = 'HN',
                 buffer = 300,
@@ -86,7 +86,7 @@ fit.HN <- secr.fit(CH,
                 trace = F,
                 verify = F)
 
-#Now the exponential
+# Now the exponential
 fit.EX <- secr.fit (CH,
                   detectfn = 'EX',
                   buffer = 300,
@@ -94,7 +94,7 @@ fit.EX <- secr.fit (CH,
                   trace = FALSE,
                   verify = F)
 
-#Combine into an object of class secrlist
+# Combine into an object of class secrlist
 fits <- secrlist(HN = fit.HN, EX = fit.EX)
 
 # Look at the density values, g0 and sigma, plus SEs
@@ -153,8 +153,9 @@ The fitted detection function and esa.plot indicate that a 300 m buffer width is
 We have selected a set of candidate models for comparison via AICc. The first 'fit.EX' is our original null model with the exponential detection function. We will compare this to a model where density varies by site 'fit.site.D.EX', where density and g0 vary by site 'fit.site.D.g0.EX', where only g0 varies by site 'fit.site.g0.EX', where density varies by season 'fit.season.D.EX', where density and g0 vary by season 'fit.season.D.g0.EX', and where only g0 varies by season 'fit.season.g0.EX'. 
 
 ```{r}
-#null model
-#fit.EX
+
+# null model
+# fit.EX
 
 # Load covariate information
 covariates <- read.csv("Data/covariates.csv")
@@ -242,14 +243,6 @@ summary(fit.site.D.g0.EX)
 
 The positive coefficient for site indicates an increase in density at Scrammy (Site A). The density estimate is also higher there. The two models mostly give similar estimates, so we are confident that our results change very little with the two models.
 
-Now we will extract the values of g0 for alternate states of parameter B (captured 1, or not captured 0).
-
-```{r}
-
-predict(fit.site.D.B.g0.EX, newdata = data.frame(B = 0:1), realnames = "g0")
-
-```
-
 
 ## Population size estimate
 
@@ -275,6 +268,8 @@ region.N(fit.site.D.EX,
 
 ```
 ## Calculate the average population size
+The above result outputs two estimates, one based on the Site A (Scrammy) density estimate and one based on the Site B (Campbell) density estimate.
+
 We standardise the mean population size by weighting each estimate by the inverse of the variance. 
 
 ```{r}
@@ -293,9 +288,9 @@ N <- (wA*SiteA + wB*SiteB)/(wA + wB)
 SE <- sqrt(1/(wA + wB))
 CI <- 1.96*SE
 
-print(paste0("Mean Population size is ", round(N,2), " with a standard error of ", round(SE,2)))
+print(paste0("Mean Population size is ", round(N,2), " with a standard error of ", round(SE,2), "and a 95% CI of ", round(N - CI,2), " to ", round(N + CI,2)))
 
-  
+
 ```
 
 
