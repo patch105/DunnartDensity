@@ -1,8 +1,9 @@
 ---
 title: "Julia Creek Dunnart Density Analysis"
 author: "Charlotte Patterson"
-format: html
-editor: visual
+format: 
+  html:
+    embed-resources: true
 ---
 
 ## Project Description
