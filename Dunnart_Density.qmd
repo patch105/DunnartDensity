@@ -70,6 +70,14 @@ median(m)
 
 par(mar = c(5,4,4,2), mgp = c(3,1,0)) # reduce margins
 hist(m, breaks = seq(0, 550,30), xlab = "Movement (m)", main = "")
+
+plot <- ggplot(data.frame(m), aes(x = m)) +
+  geom_histogram(breaks = seq(0, 450, 30), fill = "grey", color = "black", alpha = 0.7) +
+  labs(x = "Movement (m)", y = "Frequency", title = "") +
+  theme_classic()
+
+# ggsave(plot = plot , filename = "hist_movements.png", w = 20, h = 11, units = "cm", dpi = 600, device = "png" )
+
 ```
 
 ## Choosing detection function
